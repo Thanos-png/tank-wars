@@ -29,7 +29,7 @@ g++ -std=c++17 src/*.cpp -o TankWars -lSGG
 ```
 
 ## Controls
-- **Arrow and WASD Keys:** Move your tank around the arena and your cannon up and down.
+- **Arrows and WASD Keys:** Move your tank around the arena and your cannon up and down.
 - **Q key:** Apply the shield.
 - **Spacebar:** Fire cannon.
 
