@@ -3,6 +3,7 @@
 #include "player.h"
 #include "util.h"
 
+
 Level::Level(const std::string& name)
 {
 }
@@ -28,6 +29,17 @@ void Level::init()
 
 	for (auto p_gob : m_dynamic_objects)
 		if (p_gob) p_gob->init();
+
+	m_blocks.push_back(Box(2, 2.45, m_block_size_x, m_block_size_y));
+	m_blocks.push_back(Box(10, 2.45, m_block_size_x, m_block_size_y));
+
+	m_block_names.push_back("Left-base.png");
+	m_block_names.push_back("Right-base.png");
+
+	m_block_brush.outline_opacity = 0.0f;
+	m_block_brush_debug.fill_opacity = 0.1f;
+	SETCOLOR(m_block_brush_debug.fill_color, 0.2f, 1.0f, 0.1f);
+	SETCOLOR(m_block_brush_debug.outline_color, 0.3f, 1.0f, 0.2f);
 }
 
 void Level::draw()
@@ -35,17 +47,22 @@ void Level::draw()
 	float w = m_state->getCanvasWidth();
 	float h = m_state->getCanvasHeight();
 
-	float offset_x = m_state->m_global_offset_x + w / 2.0f;
-	float offset_y = m_state->m_global_offset_y + h / 2.0f;
+	float offset_x = m_state->m_global_offset_x / 4.0f + w / 2.0f;
+	float offset_y = m_state->m_global_offset_y / 4.0f + h / 2.0f;
 
 	// Draw background
 	graphics::drawRect(offset_x, offset_y, w, h, m_brush_background);
+
+	// Add clouds and stuff
 
 	// Draw Players
 	if (m_state->getPlayerLeft()->isActive())
 		m_state->getPlayerLeft()->draw();
 	if (m_state->getPlayerRight()->isActive())
 		m_state->getPlayerRight()->draw();
+
+	for (int i = 0; i < m_blocks.size(); i++)
+		drawBlock(i);
 
 	for (auto p_gob : m_static_objects)
 		if (p_gob) p_gob->draw();
@@ -62,4 +79,17 @@ void Level::update(float dt)
 		m_state->getPlayerRight()->update(dt);
 
 	GameObject::update(dt);
+}
+
+void Level::drawBlock(int i)
+{
+	Box& box = m_blocks[i];
+	float x = box.m_pos_x + m_state->m_global_offset_x;
+	float y = box.m_pos_y + m_state->m_global_offset_y;
+	m_block_brush.texture = m_state->getFullAssetPath(m_block_names[i]);
+
+	graphics::drawRect(x, y, m_block_size_x, m_block_size_y, m_block_brush);
+
+	if (m_state->m_debugging)
+		graphics::drawRect(x, y, m_block_size_x, m_block_size_y, m_block_brush_debug);
 }

@@ -9,7 +9,7 @@ void Player::init()
 		m_pos_x = 2.0f;
 	}
 	else {
-		m_pos_x = 8.0f;
+		m_pos_x = 10.0f;
 	}
 	m_pos_y = 2.87f;
 
@@ -53,12 +53,12 @@ void Player::update(float dt)
 	if (graphics::getKeyState(graphics::SCANCODE_S) and m_cannon_degrees > 0.0f)
 		m_cannon_degrees -= velocity * delta_time;
 
-	// if (isLeftPlayer == m_state->getIsLeftTurn()) {
-	// 	m_state->getPlayerRight()->m_pos_x = m_state->getCanvasWidth() / 2.0f;
-	// }
-	// else {
-	// 	m_state->getPlayerLeft()->m_pos_x = m_state->getCanvasWidth() / 2.0f;
-	// }
+	 // if (isLeftPlayer == m_state->getIsLeftTurn()) {
+	 // 	m_state->getPlayerRight()->m_pos_x = m_state->getCanvasWidth() / 2.0f;
+	 // }
+	 // else {
+	 // 	m_state->getPlayerLeft()->m_pos_x = m_state->getCanvasWidth() / 2.0f;
+	 // }
 
 	GameObject::update(dt);
 }

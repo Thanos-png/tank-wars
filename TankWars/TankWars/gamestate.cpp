@@ -40,13 +40,16 @@ void GameState::draw()
 
 void GameState::update(float dt)
 {
-	if (dt > 500)
+	// Skip updating if a long delay is detected to avoid messing up the collision simulation.
+	if (dt > 500)  // ms
 		return;
 
 	if (!m_current_level)
 		return;
 
 	m_current_level->update(dt);
+
+	m_debugging = graphics::getKeyState(graphics::SCANCODE_0);
 }
 
 void GameState::updateIsLeftTurn()
