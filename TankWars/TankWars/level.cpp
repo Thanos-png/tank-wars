@@ -42,10 +42,10 @@ void Level::draw()
 	graphics::drawRect(offset_x, offset_y, w, h, m_brush_background);
 
 	// Draw Players
-	if (m_state->getPlayer1()->isActive())
-		m_state->getPlayer1()->draw();
-	if (m_state->getPlayer2()->isActive())
-		m_state->getPlayer2()->draw();
+	if (m_state->getPlayerLeft()->isActive())
+		m_state->getPlayerLeft()->draw();
+	if (m_state->getPlayerRight()->isActive())
+		m_state->getPlayerRight()->draw();
 
 	for (auto p_gob : m_static_objects)
 		if (p_gob) p_gob->draw();
@@ -56,10 +56,10 @@ void Level::draw()
 
 void Level::update(float dt)
 {
-	if (m_state->getPlayer1()->isActive())
-		m_state->getPlayer1()->update(dt);
-	if (m_state->getPlayer2()->isActive())
-		m_state->getPlayer2()->update(dt);
+	if (m_state->getPlayerLeft()->isActive() and m_state->getIsLeftTurn())
+		m_state->getPlayerLeft()->update(dt);
+	if (m_state->getPlayerRight()->isActive() and not m_state->getIsLeftTurn())
+		m_state->getPlayerRight()->update(dt);
 
 	GameObject::update(dt);
 }

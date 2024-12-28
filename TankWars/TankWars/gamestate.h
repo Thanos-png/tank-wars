@@ -14,9 +14,10 @@ private:
 
 	GameState();
 
-	class Player* m_player1 = 0;
-	class Player* m_player2 = 0;
+	class Player* m_playerLeft = 0;
+	class Player* m_playerRight = 0;
 	class Level* m_current_level = 0;
+	bool isLeftTurn = true;
 
 public:
 	float m_global_offset_x = 0.0f;
@@ -26,6 +27,8 @@ public:
 	void init();
 	void draw();
 	void update(float dt);
+	void updateIsLeftTurn();
+	bool getIsLeftTurn();
 
 	static GameState* getInstance();
 	~GameState();
@@ -36,6 +39,6 @@ public:
 	std::string getAssetDir();
 	std::string getFullAssetPath(const std::string & asset);
 
-	class Player* getPlayer1() { return m_player1; }
-	class Player* getPlayer2() { return m_player2; }
+	class Player* getPlayerLeft() { return m_playerLeft; }
+	class Player* getPlayerRight() { return m_playerRight; }
 };

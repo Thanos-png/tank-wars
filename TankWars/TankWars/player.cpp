@@ -9,15 +9,15 @@ void Player::init()
 		m_pos_x = 2.0f;
 	}
 	else {
-		m_pos_x = 6.0f;
+		m_pos_x = 8.0f;
 	}
-	m_pos_y = 3.0f;
+	m_pos_y = 2.87f;
 
 	m_width = 0.78f;  // x is 2.62 times the y
 	m_height = 0.3f;
 
-	m_state->m_global_offset_x = m_state->getCanvasWidth() / 2.0f - m_pos_x;
-	m_state->m_global_offset_y = m_state->getCanvasHeight() / 2.0f - m_pos_y;
+	// m_state->m_global_offset_x = m_state->getCanvasWidth() / 2.0f - m_pos_x;
+	// m_state->m_global_offset_y = m_state->getCanvasHeight() / 2.0f - m_pos_y;
 
 	SETCOLOR(m_brush_player.fill_color, 1.0f, 1.0f, 1.0f);
 	m_brush_player.fill_opacity = 1.0f;
@@ -53,8 +53,12 @@ void Player::update(float dt)
 	if (graphics::getKeyState(graphics::SCANCODE_S) and m_cannon_degrees > 0.0f)
 		m_cannon_degrees -= velocity * delta_time;
 
-	m_state->m_global_offset_x = m_state->getCanvasWidth() / 2.0f - m_pos_x;
-	m_state->m_global_offset_y = m_state->getCanvasHeight() / 2.0f - m_pos_y;
+	// if (isLeftPlayer == m_state->getIsLeftTurn()) {
+	// 	m_state->getPlayerRight()->m_pos_x = m_state->getCanvasWidth() / 2.0f;
+	// }
+	// else {
+	// 	m_state->getPlayerLeft()->m_pos_x = m_state->getCanvasWidth() / 2.0f;
+	// }
 
 	GameObject::update(dt);
 }

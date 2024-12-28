@@ -8,10 +8,10 @@ GameState::GameState()
 
 GameState::~GameState()
 {
-	if (m_player1)
-		delete m_player1;
-	if (m_player2)
-		delete m_player2;
+	if (m_playerLeft)
+		delete m_playerLeft;
+	if (m_playerRight)
+		delete m_playerRight;
 	if (m_current_level)
 		delete m_current_level;
 }
@@ -21,10 +21,10 @@ void GameState::init()
 	m_current_level = new Level("Level1");
 	m_current_level->init();
 
-	m_player1 = new Player("Player1", true);
-	m_player1->init();
-	m_player2 = new Player("Player2", false);
-	m_player2->init();
+	m_playerLeft = new Player("Player1", true);
+	m_playerLeft->init();
+	m_playerRight = new Player("Player2", false);
+	m_playerRight->init();
 
 	graphics::preloadBitmaps(getAssetDir());
 	graphics::setFont(m_asset_path + "Broken-Detroit.ttf");
@@ -47,6 +47,21 @@ void GameState::update(float dt)
 		return;
 
 	m_current_level->update(dt);
+}
+
+void GameState::updateIsLeftTurn()
+{
+	if (isLeftTurn) {
+		isLeftTurn = false;
+	}
+	else {
+		isLeftTurn = true;
+	}
+}
+
+bool GameState::getIsLeftTurn()
+{
+	return isLeftTurn;
 }
 
 GameState* GameState::getInstance()
