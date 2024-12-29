@@ -33,8 +33,8 @@ void Level::init()
 	m_blocks.push_back(Box(2, 2.45, m_block_size_x, m_block_size_y));
 	m_blocks.push_back(Box(10, 2.45, m_block_size_x, m_block_size_y));
 
-	m_block_names.push_back("Left-base.png");
-	m_block_names.push_back("Right-base.png");
+	m_block_names.push_back("roof.png");
+	m_block_names.push_back("roof.png");
 
 	m_block_brush.outline_opacity = 0.0f;
 	m_block_brush_debug.fill_opacity = 0.1f;
