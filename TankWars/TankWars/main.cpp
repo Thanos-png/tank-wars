@@ -2,6 +2,7 @@
 #include "util.h"
 #include "gamestate.h"
 
+
 void init()
 {
 	GameState::getInstance()->init();

@@ -1,17 +1,24 @@
 #pragma once
+#include "sgg/graphics.h"
 #include "gameobject.h"
 #include "box.h"
-#include "sgg/graphics.h"
+#include "shot.h"
 
+	
 class Player : public GameObject, public Box
 {
-	graphics::Brush m_brush_player;
+	class Shot* m_shot = 0;
 
-	bool isLeftPlayer = NULL;
+	graphics::Brush m_brush_player;
+	std::vector<std::string> m_sprites;
+
+	bool m_shootingFlag = false;
+	bool m_isLeftPlayer = NULL;
 	float m_cannon_degrees = 0.0f;
 
 public:
-	Player(std::string name, bool isLeft) : GameObject(name), isLeftPlayer(isLeft) {}
+	Player(std::string name, bool isLeft);
+	~Player();
 
 	void init() override;
 	void draw() override;
@@ -19,4 +26,12 @@ public:
 
 	void setCannonDegrees(float degrees);
 	float getCannonDegrees();
+
+	void setShootingFlag(bool flag);
+	bool getShootingFlag();
+
+	Shot* getShotInstance();
+
+protected:
+	void debugDraw();
 };

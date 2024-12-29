@@ -78,6 +78,8 @@ void Level::update(float dt)
 	if (m_state->getPlayerRight()->isActive() and not m_state->getIsLeftTurn())
 		m_state->getPlayerRight()->update(dt);
 
+	checkCollisions();
+
 	GameObject::update(dt);
 }
 
@@ -92,4 +94,27 @@ void Level::drawBlock(int i)
 
 	if (m_state->m_debugging)
 		graphics::drawRect(x, y, m_block_size_x, m_block_size_y, m_block_brush_debug);
+}
+
+void Level::checkCollisions()
+{
+	for (auto& box : m_blocks) {
+		if (m_state->getPlayerLeft()->getShootingFlag() and m_state->getPlayerLeft()->getShotInstance()->intersect(box))
+			m_state->getPlayerLeft()->getShotInstance()->reset();
+			break;
+	}
+
+	for (auto& box : m_blocks) {
+		float offset = 0.0f;
+		if (m_state->getIsLeftTurn() and m_state->getPlayerLeft()->intersectSideways(box))
+			m_state->getPlayerLeft()->m_pos_x += offset;
+			break;
+	}
+
+	for (auto& box : m_blocks) {
+		float offset = 0.0f;
+		if (not m_state->getIsLeftTurn() and m_state->getPlayerRight()->intersectSideways(box))
+			m_state->getPlayerRight()->m_pos_x += offset;
+			break;
+	}
 }

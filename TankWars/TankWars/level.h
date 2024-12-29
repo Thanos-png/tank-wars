@@ -1,10 +1,11 @@
 #pragma once
-#include "gameobject.h"
 #include "sgg/graphics.h"
+#include "gameobject.h"
 #include "box.h"
 #include <list>
 #include <vector>
 #include <string>
+
 
 class Level : public GameObject
 {
@@ -27,6 +28,7 @@ class Level : public GameObject
 	graphics::Brush m_block_brush_debug;
 
 	void drawBlock(int i);
+	void checkCollisions();
 
 public:
 	Level(const std::string& name = "Level0");

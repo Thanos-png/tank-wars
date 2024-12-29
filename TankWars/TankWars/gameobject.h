@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 
+
 class GameObject
 {
 	static int m_next_id;
@@ -13,10 +14,11 @@ protected:
 
 public:
 	GameObject(const std::string& name = "");
+	virtual ~GameObject() {}
+
 	virtual void init() {}
 	virtual void draw() {}
 	virtual void update(float dt) {}
-	virtual ~GameObject() {}
 
 	bool isActive() const { return m_active; }
 	void setActive(bool a) { m_active = a; }

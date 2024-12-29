@@ -2,6 +2,7 @@
 #include "sgg/graphics.h"
 #include <string>
 
+
 class GameState
 {
 private:

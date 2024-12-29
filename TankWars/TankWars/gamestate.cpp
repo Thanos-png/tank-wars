@@ -1,6 +1,9 @@
 #include "gamestate.h"
 #include "level.h"
 #include "player.h"
+#include <thread>
+#include <chrono>
+
 
 GameState::GameState()
 {
@@ -43,6 +46,10 @@ void GameState::update(float dt)
 	// Skip updating if a long delay is detected to avoid messing up the collision simulation.
 	if (dt > 500)  // ms
 		return;
+
+	float sleep_time = std::max(0.0f, 17.0f - dt);
+
+	std::this_thread::sleep_for(std::chrono::duration<float, std::milli>());
 
 	if (!m_current_level)
 		return;
