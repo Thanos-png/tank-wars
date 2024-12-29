@@ -6,7 +6,7 @@ Welcome to **Tank Wars**, a dynamic tank battle game developed in C++ using the 
 ## Features
 - **Tanks Movement and Shield:** You can move your tank in any direction or apply a shield infront of your tank to avoid getting hit.
 - **Various Levels:** Progress through different levels, each presenting unique challenges and environments.
-- **Two Player Mode:** Compete against friends in two player mode to see who can dominate the arena.
+- **Two Player Mode(Offline):** Compete against friends in two player mode to see who can dominate the arena.
 
 ## Getting Started
 ### Prerequisites
@@ -17,19 +17,15 @@ Before you can run Tank Wars, make sure you have the following installed:
 1. Clone the repository:
 ```
 git clone https://github.com/Thanos-png/tank-wars.git
-cd tank-wars
+cd tank-wars/TankWars/bin
 ```
-2. Compile the source code:
-```
-g++ -std=c++17 src/*.cpp -o TankWars -lSGG
-```
-3. Run the game:
+2. Run the game:
 ```
 ./TankWars
 ```
 
 ## Controls
-- **Arrows and WASD Keys:** Move your tank around the arena and your cannon up and down.
+- **Arrows and WASD Keys:** Move your tank around the arena and adjust your cannon.
 - **Q key:** Apply the shield.
 - **Spacebar:** Fire cannon.
 
@@ -40,4 +36,4 @@ Distributed under the MIT License. See `LICENSE` for more information.
 - [SGG Library](https://github.com/cgaueb/sgg)
 - [Athens University of Economics and Business](https://www.dept.aueb.gr/en/cs)
 
-We hope you enjoy playing **Tank Wars** as much as we enjoyed making it!
+I hope you enjoy playing **Tank Wars** as much as I enjoyed making it!
