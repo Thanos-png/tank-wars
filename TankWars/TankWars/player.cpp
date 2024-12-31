@@ -103,16 +103,17 @@ void Player::update(float dt)
 	if (graphics::getKeyState(graphics::SCANCODE_D))
 		m_pos_x += velocity * delta_time;
 	if (graphics::getKeyState(graphics::SCANCODE_W) and m_cannon_degrees < 80.0f)
-		m_cannon_degrees += 5 * velocity * delta_time;
+		m_cannon_degrees += 7 * velocity * delta_time;
 	if (graphics::getKeyState(graphics::SCANCODE_S) and m_cannon_degrees > 0.0f)
-		m_cannon_degrees -= 5 * velocity * delta_time;
+		m_cannon_degrees -= 7 * velocity * delta_time;
 
 	if (graphics::getKeyState(graphics::SCANCODE_SPACE)) {
-		if (not m_shootingFlag) {
+		if (not m_shootingFlag and not m_shot->isActive()) {  // Fire only if the shot is inactive
 			m_shot->setCannonDegrees(m_cannon_degrees);
-			m_shootingFlag = true;
 
-			m_shot->init();
+			m_shot->init();  // Reinitialize the shot
+			m_shot->setActive(true);  // Reactivate the shot
+			m_shootingFlag = true;
 		}
 	}
 

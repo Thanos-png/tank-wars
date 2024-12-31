@@ -99,9 +99,21 @@ void Level::drawBlock(int i)
 void Level::checkCollisions()
 {
 	for (auto& box : m_blocks) {
-		if (m_state->getPlayerLeft()->getShootingFlag() and m_state->getPlayerLeft()->getShotInstance()->intersect(box))
+		if (m_state->getIsLeftTurn() && m_state->getPlayerLeft()->getShotInstance()->isActive() &&
+			m_state->getPlayerLeft()->getShotInstance()->intersect(box)) {
+			// Collision detected, deactivate shot
 			m_state->getPlayerLeft()->getShotInstance()->reset();
-			break;
+			m_state->getPlayerLeft()->getShotInstance()->setActive(false);
+			return;
+		}
+
+		if (!m_state->getIsLeftTurn() && m_state->getPlayerRight()->getShotInstance()->isActive() &&
+			m_state->getPlayerRight()->getShotInstance()->intersect(box)) {
+			// Collision detected, deactivate shot
+			m_state->getPlayerRight()->getShotInstance()->reset();
+			m_state->getPlayerRight()->getShotInstance()->setActive(false);
+			return;
+		}
 	}
 
 	for (auto& box : m_blocks) {
