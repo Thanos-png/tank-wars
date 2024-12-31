@@ -5,6 +5,7 @@
 #include <list>
 #include <vector>
 #include <string>
+#include <functional>
 
 
 class Level : public GameObject
@@ -27,6 +28,8 @@ class Level : public GameObject
 	graphics::Brush m_block_brush;
 	graphics::Brush m_block_brush_debug;
 
+	std::function<float(float)> m_ground_function; // Function representing the ground-level
+
 	void drawBlock(int i);
 	void checkCollisions();
 
@@ -37,4 +40,7 @@ public:
 	void init() override;
 	void draw() override;
 	void update(float dt) override;
+
+	void setGroundFunction(std::function<float(float)> func);
+	float getGroundLevel(float x);
 };

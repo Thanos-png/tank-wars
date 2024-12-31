@@ -2,7 +2,6 @@
 #include "gamestate.h"
 #include "player.h"
 #include "util.h"
-#include <cmath>
 
 
 Shot::Shot()
@@ -50,8 +49,8 @@ void Shot::update(float dt)
 	// m_state->m_global_offset_x = m_state->getCanvasWidth() / 2.0f - m_pos_x;
 	// m_state->m_global_offset_y = m_state->getCanvasHeight() / 2.0f - m_pos_y;
 
-	// The shot has bugged and gone below the surface
-	if (m_pos_y >= 2.9f) {
+	// In case the shot has bugged and gone below the surface
+	if (m_pos_y >= 10.0f) {
 		m_vx = 0;
 		m_vy = 0;
 		setActive(false);

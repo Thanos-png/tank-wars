@@ -19,6 +19,8 @@ Level::~Level()
 
 void Level::init()
 {
+	setGroundFunction([](float x) -> float { return 2.9f; });
+
 	SETCOLOR(m_brush_background.fill_color, 1.0f, 1.0f, 1.0f);
 	m_brush_background.fill_opacity = 1.0f;
 	m_brush_background.outline_opacity = 0.0f;
@@ -83,6 +85,19 @@ void Level::update(float dt)
 	GameObject::update(dt);
 }
 
+void Level::setGroundFunction(std::function<float(float)> func)
+{
+	m_ground_function = func;
+}
+
+float Level::getGroundLevel(float x)
+{
+	if (m_ground_function) {
+		return m_ground_function(x);
+	}
+	return 0.0f;  // Default ground level if no function is set
+}
+
 void Level::drawBlock(int i)
 {
 	Box& box = m_blocks[i];
@@ -98,24 +113,30 @@ void Level::drawBlock(int i)
 
 void Level::checkCollisions()
 {
+	// Check if the shot collides with a Box
 	for (auto& box : m_blocks) {
-		if (m_state->getIsLeftTurn() && m_state->getPlayerLeft()->getShotInstance()->isActive() &&
+		if (m_state->getIsLeftTurn() and m_state->getPlayerLeft()->getShotInstance()->isActive() and
 			m_state->getPlayerLeft()->getShotInstance()->intersect(box)) {
 			// Collision detected, deactivate shot
 			m_state->getPlayerLeft()->getShotInstance()->reset();
 			m_state->getPlayerLeft()->getShotInstance()->setActive(false);
-			return;
+
+			graphics::playSound(m_state->getFullAssetPath("ground-collision.wav"), 0.5f);
+			break;
 		}
 
-		if (!m_state->getIsLeftTurn() && m_state->getPlayerRight()->getShotInstance()->isActive() &&
+		if (!m_state->getIsLeftTurn() and m_state->getPlayerRight()->getShotInstance()->isActive() and
 			m_state->getPlayerRight()->getShotInstance()->intersect(box)) {
 			// Collision detected, deactivate shot
 			m_state->getPlayerRight()->getShotInstance()->reset();
 			m_state->getPlayerRight()->getShotInstance()->setActive(false);
-			return;
+
+			graphics::playSound(m_state->getFullAssetPath("ground-collision.wav"), 0.5f);
+			break;
 		}
 	}
 
+	// Check if a player collides with a Box
 	for (auto& box : m_blocks) {
 		float offset = 0.0f;
 		if (m_state->getIsLeftTurn() and m_state->getPlayerLeft()->intersectSideways(box))
@@ -128,5 +149,30 @@ void Level::checkCollisions()
 		if (not m_state->getIsLeftTurn() and m_state->getPlayerRight()->intersectSideways(box))
 			m_state->getPlayerRight()->m_pos_x += offset;
 			break;
+	}
+
+	// Check for ground collision
+	if (m_state->getPlayerLeft()->getShotInstance()->isActive()) {
+		float shot_x = m_state->getPlayerLeft()->getShotInstance()->getPosX();
+		float shot_y = m_state->getPlayerLeft()->getShotInstance()->getPosY();
+		if (shot_y >= getGroundLevel(shot_x)) {
+			m_state->getPlayerLeft()->getShotInstance()->reset();
+			m_state->getPlayerLeft()->getShotInstance()->setActive(false);
+
+			graphics::playSound(m_state->getFullAssetPath("ground-collision.wav"), 0.5f);
+			return;
+		}
+	}
+
+	if (m_state->getPlayerRight()->getShotInstance()->isActive()) {
+		float shot_x = m_state->getPlayerRight()->getShotInstance()->getPosX();
+		float shot_y = m_state->getPlayerRight()->getShotInstance()->getPosY();
+		if (shot_y >= getGroundLevel(shot_x)) {
+			m_state->getPlayerRight()->getShotInstance()->reset();
+			m_state->getPlayerRight()->getShotInstance()->setActive(false);
+
+			graphics::playSound(m_state->getFullAssetPath("ground-collision.wav"), 0.5f);
+			return;
+		}
 	}
 }
