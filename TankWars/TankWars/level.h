@@ -23,6 +23,7 @@ class Level : public GameObject
 
 	const float m_block_size_x = 1.0f;
 	const float m_block_size_y = 0.2f;
+
 	std::vector<Box> m_blocks;
 	std::vector<std::string> m_block_names;
 	graphics::Brush m_block_brush;

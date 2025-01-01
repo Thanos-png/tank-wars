@@ -33,6 +33,9 @@
     <ClCompile Include="shot.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="shield.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="util.h">
@@ -54,6 +57,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="shot.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="shield.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -32,8 +32,13 @@ void Level::init()
 	for (auto p_gob : m_dynamic_objects)
 		if (p_gob) p_gob->init();
 
-	m_blocks.push_back(Box(2, 2.45, m_block_size_x, m_block_size_y));
-	m_blocks.push_back(Box(10, 2.45, m_block_size_x, m_block_size_y));
+	Box leftBase = Box(2, 2.45, m_block_size_x, m_block_size_y);
+	m_blocks.push_back(leftBase);
+	leftBase.isBase = true;
+
+	Box rightBase = Box(10, 2.45, m_block_size_x, m_block_size_y);
+	m_blocks.push_back(rightBase);
+	rightBase.isBase = true;
 
 	m_block_names.push_back("roof.png");
 	m_block_names.push_back("roof.png");
@@ -71,6 +76,9 @@ void Level::draw()
 
 	for (auto p_gob : m_dynamic_objects)
 		if (p_gob) p_gob->draw();
+
+	// graphics::Brush m_brush_test;
+	// graphics::drawRect(12, 6, 1, 1, m_brush_test);
 }
 
 void Level::update(float dt)
@@ -122,6 +130,16 @@ void Level::checkCollisions()
 			m_state->getPlayerLeft()->getShotInstance()->setActive(false);
 
 			graphics::playSound(m_state->getFullAssetPath("ground-collision.wav"), 0.5f);
+
+			// Destroy shield
+			if (box.isShield) {
+				m_state->getPlayerLeft()->getShieldInstance()->reset();
+				m_state->getPlayerLeft()->getShieldInstance()->setActive(false);
+			}
+
+			if (box.isBase) {
+				// Destroy Base
+			}
 			break;
 		}
 
@@ -132,6 +150,16 @@ void Level::checkCollisions()
 			m_state->getPlayerRight()->getShotInstance()->setActive(false);
 
 			graphics::playSound(m_state->getFullAssetPath("ground-collision.wav"), 0.5f);
+
+			// Destroy shield
+			if (box.isShield) {
+				m_state->getPlayerLeft()->getShieldInstance()->reset();
+				m_state->getPlayerLeft()->getShieldInstance()->setActive(false);
+			}
+
+			if (box.isBase) {
+				// Destroy Base
+			}
 			break;
 		}
 	}

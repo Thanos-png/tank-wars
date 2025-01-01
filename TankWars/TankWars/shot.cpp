@@ -36,7 +36,7 @@ void Shot::init()
 
 void Shot::draw()
 {
-	graphics::drawRect(m_pos_x, m_pos_y, 0.2f, 0.2f, m_brush_shot);
+	graphics::drawRect(m_pos_x, m_pos_y, m_width, m_height, m_brush_shot);
 
 	if (m_state->m_debugging)
 		debugDraw();
@@ -44,13 +44,13 @@ void Shot::draw()
 
 void Shot::update(float dt)
 {
-	shotBullet(dt);
+	shotBullet(dt);  // -------------------------------------------------------------------------------
 
 	// m_state->m_global_offset_x = m_state->getCanvasWidth() / 2.0f - m_pos_x;
 	// m_state->m_global_offset_y = m_state->getCanvasHeight() / 2.0f - m_pos_y;
 
 	// In case the shot has bugged and gone below the surface
-	if (m_pos_y >= 10.0f) {
+	if (m_pos_y >= 20.0f) {
 		m_vx = 0;
 		m_vy = 0;
 		setActive(false);
@@ -64,7 +64,7 @@ void Shot::update(float dt)
 void Shot::reset()
 {
 	// Reset the shot position
-	Box::m_pos_x = 0.0f;
+	m_pos_x = 0.0f;
 	m_pos_y = 0.0f;
 
 	// Reset velocities
@@ -136,7 +136,7 @@ void Shot::shotBullet(float dt)
 	// X
 	m_vx = std::min(m_max_velocity, m_vx + delta_time * move * m_accel_horizontal);
 	m_vx = std::max(-m_max_velocity, m_vx);
-	m_vx -= 0.2f * m_vx / (0.1f + fabs(m_vx));
+	m_vx -= 0.2f * m_vx / (0.1f + fabs(m_vx));  // * 1.01f;
 	if (fabs(m_vx) < 0.01f) { m_vx = 0.0f; }
 	m_pos_x += m_vx * delta_time / 0.2f;
 

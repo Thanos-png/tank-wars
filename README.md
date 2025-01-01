@@ -5,13 +5,13 @@ Welcome to **Tank Wars**, a dynamic tank battle game developed in C++ using the 
 
 ## Features
 - **Tanks Movement and Shield:** You can move your tank in any direction or apply a shield infront of your tank to avoid getting hit.
-- **Various Levels:** Progress through different levels, each presenting unique challenges and environments.
+- **Angle and Power Control:** Each player can adjust the angle of their gun and the power of their shot.
 - **Two Player Mode(Offline):** Compete against friends in two player mode to see who can dominate the arena.
 
 ## Getting Started
 ### Prerequisites
 Before you can run Tank Wars, make sure you have the following installed:
-- A C++ compiler that supports C++17 or later.
+- C++14 or later..
 
 ### Installation
 1. Clone the repository:

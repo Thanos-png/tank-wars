@@ -5,6 +5,9 @@
 
 struct Box
 {
+    bool isShield = false;
+    bool isBase = false;
+
     float m_pos_x  = 0.0f;
     float m_pos_y  = 0.0f;
     float m_width  = 1.0f;

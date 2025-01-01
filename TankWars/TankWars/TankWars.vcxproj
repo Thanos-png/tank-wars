@@ -144,6 +144,7 @@
     <ClCompile Include="level.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="player.cpp" />
+    <ClCompile Include="shield.cpp" />
     <ClCompile Include="shot.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -152,6 +153,7 @@
     <ClInclude Include="gamestate.h" />
     <ClInclude Include="level.h" />
     <ClInclude Include="player.h" />
+    <ClInclude Include="shield.h" />
     <ClInclude Include="shot.h" />
     <ClInclude Include="util.h" />
   </ItemGroup>

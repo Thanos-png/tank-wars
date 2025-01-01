@@ -3,7 +3,7 @@
 #include "util.h"
 
 
-Player::Player(std::string name, bool isLeft) : GameObject(name), m_shot(Shot::getInstance()), m_isLeftPlayer(isLeft)
+Player::Player(std::string name, bool isLeft) : GameObject(name), m_shot(Shot::getInstance()), m_shield(Shield::getInstance()), m_isLeftPlayer(isLeft)
 {
 }
 
@@ -11,6 +11,8 @@ Player::~Player()
 {
 	if (m_shot)
 		delete m_shot;
+	if (m_shield)
+		delete m_shield;
 }
 
 void Player::init()
@@ -83,9 +85,15 @@ void Player::draw()
 	graphics::resetPose();
 
 	// Draw Cannonball
-	if (m_shootingFlag)
+	if (m_shot->isActive() and m_shootingFlag)
 		m_shot->draw();
 
+	// Draw Shield
+	if (m_shield_amount >= 1 and m_shield->isActive() and m_deployed_shield) {
+		m_shield->draw();
+	}
+
+	// Debugging
 	if (m_state->m_debugging)
 		debugDraw();
 }
@@ -98,15 +106,36 @@ void Player::update(float dt)
 	float delta_time = dt / 1000.0f;
 	const float velocity = 0.8f;
 
-	if (graphics::getKeyState(graphics::SCANCODE_A))
-		m_pos_x -= velocity * delta_time;
-	if (graphics::getKeyState(graphics::SCANCODE_D))
-		m_pos_x += velocity * delta_time;
-	if (graphics::getKeyState(graphics::SCANCODE_W) and m_cannon_degrees < 80.0f)
-		m_cannon_degrees += 7 * velocity * delta_time;
-	if (graphics::getKeyState(graphics::SCANCODE_S) and m_cannon_degrees > 0.0f)
-		m_cannon_degrees -= 7 * velocity * delta_time;
+	if (not m_shootingFlag) {  // Don't update the position or the cannon degrees during firing
+		if (graphics::getKeyState(graphics::SCANCODE_A))
+			m_pos_x -= velocity * delta_time;
+		if (graphics::getKeyState(graphics::SCANCODE_D))
+			m_pos_x += velocity * delta_time;
+		if (graphics::getKeyState(graphics::SCANCODE_W) and m_cannon_degrees < 80.0f)
+			m_cannon_degrees += 7 * velocity * delta_time;
+		if (graphics::getKeyState(graphics::SCANCODE_S) and m_cannon_degrees > 0.0f)
+			m_cannon_degrees -= 7 * velocity * delta_time;
 
+		if (graphics::getKeyState(graphics::SCANCODE_LEFT))
+			m_pos_x -= velocity * delta_time;
+		if (graphics::getKeyState(graphics::SCANCODE_RIGHT))
+			m_pos_x += velocity * delta_time;
+		if (graphics::getKeyState(graphics::SCANCODE_UP) and m_cannon_degrees < 80.0f)
+			m_cannon_degrees += 7 * velocity * delta_time;
+		if (graphics::getKeyState(graphics::SCANCODE_DOWN) and m_cannon_degrees > 0.0f)
+			m_cannon_degrees -= 7 * velocity * delta_time;
+	}
+
+	// Check to deploy shield
+	if (graphics::getKeyState(graphics::SCANCODE_Q)) {
+		if (m_shield_amount >= 1 and not m_shield->isActive()) {  // Deploy shield if the player has any and there're inactive
+			m_shield->init();  // Reinitialize the shield
+			m_shield->setActive(true);  // Reactivate the shield
+			m_deployed_shield = true;
+		}
+	}
+
+	// Check to fire shot
 	if (graphics::getKeyState(graphics::SCANCODE_SPACE)) {
 		if (not m_shootingFlag and not m_shot->isActive()) {  // Fire only if the shot is inactive
 			m_shot->setCannonDegrees(m_cannon_degrees);
@@ -114,6 +143,8 @@ void Player::update(float dt)
 			m_shot->init();  // Reinitialize the shot
 			m_shot->setActive(true);  // Reactivate the shot
 			m_shootingFlag = true;
+
+			graphics::playSound(m_state->getFullAssetPath("fire-shot.wav"), 0.5f);
 		}
 	}
 
@@ -121,6 +152,10 @@ void Player::update(float dt)
 
 	if (m_shot->isActive() and m_shootingFlag) {
 		m_shot->update(dt);
+	}
+
+	if (m_shield->isActive() and m_deployed_shield) {
+		m_shield->update(dt);
 	}
 
 	// if (isLeftPlayer == m_state->getIsLeftTurn()) {
@@ -169,9 +204,29 @@ bool Player::getShootingFlag()
 	return m_shootingFlag;
 }
 
+void Player::setDeployedShield(bool deployedShield)
+{
+	m_deployed_shield = deployedShield;
+}
+
+bool Player::getDeployedShield()
+{
+	return m_deployed_shield;
+}
+
+void Player::decreaseShieldAmount()
+{
+	m_shield_amount -= 1;
+}
+
 Shot* Player::getShotInstance()
 {
 	return m_shot;
+}
+
+Shield* Player::getShieldInstance()
+{
+	return m_shield;
 }
 
 float m_cannon_degrees = 0;
