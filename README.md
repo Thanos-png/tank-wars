@@ -11,7 +11,7 @@ Welcome to **Tank Wars**, a dynamic tank battle game developed in C++ using the 
 ## Getting Started
 ### Prerequisites
 Before you can run Tank Wars, make sure you have the following installed:
-- C++14 or later..
+- C++14 or later.
 
 ### Installation
 1. Clone the repository:

@@ -1,6 +1,7 @@
 #include "shield.h"
 #include "gamestate.h"
 #include "player.h"
+#include "level.h"
 #include "util.h"
 
 
@@ -17,28 +18,32 @@ void Shield::init()
 	if (m_state->getPlayerLeft()->isActive() and m_state->getIsLeftTurn()) {
 		m_pos_x = m_state->getPlayerLeft()->m_pos_x;
 		m_pos_y = m_state->getPlayerLeft()->m_pos_y;
+
+		m_isLeftPlayer = true;
 	}
 	if (m_state->getPlayerRight()->isActive() and not m_state->getIsLeftTurn()) {
 		m_pos_x = m_state->getPlayerRight()->m_pos_x;
 		m_pos_y = m_state->getPlayerRight()->m_pos_y;
+
+		m_isLeftPlayer = false;
 	}
 
-	m_width = 0.15f;
-	m_height = 0.7f;
+	if (m_state->getPlayerRight()->isActive() and not m_state->getIsLeftTurn())
+		offset *= -1.0f;
+	m_pos_x += offset;
 
 	SETCOLOR(m_brush_shield.fill_color, 1.0f, 1.0f, 1.0f);
 	m_brush_shield.fill_opacity = 1.0f;
 	m_brush_shield.outline_opacity = 0.0f;
 	m_brush_shield.texture = m_state->getInstance()->getFullAssetPath("shield.png");
+
+	// Add Shield to m_blocks for collision checking in Level
+	m_state->getCurrentLevel()->addBlocks(m_pos_x, m_pos_y, m_width, m_height);
 }
 
 void Shield::draw()
 {
-	float offset = 0.6f;
-	if (m_state->getPlayerRight()->isActive() and not m_state->getIsLeftTurn())
-		offset *= -1.0f;
-
-	graphics::drawRect(m_pos_x + offset, m_pos_y, m_width, m_height, m_brush_shield);
+	graphics::drawRect(getPosX(), getPosY(), m_width, m_height, m_brush_shield);
 
 	if (m_state->m_debugging)
 		debugDraw();
@@ -61,7 +66,6 @@ void Shield::update(float dt)
 	}
 
 	if (m_turn_counter >= 5) {
-		setActive(false);
 		reset();
 		return;
 	}
@@ -82,6 +86,12 @@ void Shield::reset()
 		m_state->getPlayerLeft()->decreaseShieldAmount();
 	if (m_state->getPlayerRight()->isActive() and not m_state->getIsLeftTurn())
 		m_state->getPlayerRight()->decreaseShieldAmount();
+
+	// Remove shield from m_blocks in the Level
+	// m_state->getCurrentLevel()->removeBlocks();
+
+	// Deactivate the shield
+	setActive(false);
 }
 
 Shield* Shield::getInstance()

@@ -18,8 +18,8 @@ class Level : public GameObject
 	float m_center_x = 5.0f;
 	float m_center_y = 5.0f;
 
-	const float m_shield_size_x = 0.2f;
-	const float m_shield_size_y = 0.8f;
+	const float m_shield_size_x = 0.15f;
+	const float m_shield_size_y = 0.7f;
 
 	const float m_block_size_x = 1.0f;
 	const float m_block_size_y = 0.2f;
@@ -41,6 +41,10 @@ public:
 	void init() override;
 	void draw() override;
 	void update(float dt) override;
+
+	std::vector<Box>& getBlocks();
+	void addBlocks(float m_pos_x, float m_pos_y, float m_width, float m_height);
+	void removeBlocks();
 
 	void setGroundFunction(std::function<float(float)> func);
 	float getGroundLevel(float x);

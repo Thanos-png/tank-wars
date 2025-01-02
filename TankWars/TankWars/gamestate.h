@@ -42,4 +42,5 @@ public:
 
 	class Player* getPlayerLeft() { return m_playerLeft; }
 	class Player* getPlayerRight() { return m_playerRight; }
+	class Level* getCurrentLevel() { return m_current_level; }
 };

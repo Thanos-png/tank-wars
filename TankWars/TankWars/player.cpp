@@ -1,5 +1,6 @@
 #include "player.h"
 #include "gamestate.h"
+#include "level.h"
 #include "util.h"
 
 
@@ -130,7 +131,6 @@ void Player::update(float dt)
 	if (graphics::getKeyState(graphics::SCANCODE_Q)) {
 		if (m_shield_amount >= 1 and not m_shield->isActive()) {  // Deploy shield if the player has any and there're inactive
 			m_shield->init();  // Reinitialize the shield
-			m_shield->setActive(true);  // Reactivate the shield
 			m_deployed_shield = true;
 		}
 	}
@@ -139,9 +139,7 @@ void Player::update(float dt)
 	if (graphics::getKeyState(graphics::SCANCODE_SPACE)) {
 		if (not m_shootingFlag and not m_shot->isActive()) {  // Fire only if the shot is inactive
 			m_shot->setCannonDegrees(m_cannon_degrees);
-
 			m_shot->init();  // Reinitialize the shot
-			m_shot->setActive(true);  // Reactivate the shot
 			m_shootingFlag = true;
 
 			graphics::playSound(m_state->getFullAssetPath("fire-shot.wav"), 0.5f);
@@ -150,10 +148,12 @@ void Player::update(float dt)
 
 	draw();
 
+	// Update shot
 	if (m_shot->isActive() and m_shootingFlag) {
 		m_shot->update(dt);
 	}
 
+	// Update shield
 	if (m_shield->isActive() and m_deployed_shield) {
 		m_shield->update(dt);
 	}

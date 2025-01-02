@@ -53,7 +53,6 @@ void Shot::update(float dt)
 	if (m_pos_y >= 20.0f) {
 		m_vx = 0;
 		m_vy = 0;
-		setActive(false);
 		reset();
 		return;
 	}
@@ -75,6 +74,9 @@ void Shot::reset()
 		m_state->getPlayerLeft()->setShootingFlag(false);
 	if (m_state->getPlayerRight()->isActive() and not m_state->getIsLeftTurn())
 		m_state->getPlayerRight()->setShootingFlag(false);
+
+	// Deactivate the shield
+	setActive(false);
 }
 
 void Shot::setCannonDegrees(float cannonDegrees)
