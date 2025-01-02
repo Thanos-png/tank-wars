@@ -2,6 +2,7 @@
 #include "gamestate.h"
 #include "player.h"
 #include "util.h"
+#include <cmath>
 
 
 Level::Level(const std::string& name)
@@ -17,9 +18,19 @@ Level::~Level()
 		if (p_gob) delete p_gob;
 }
 
+const float e = 2.71828f;
+
 void Level::init()
 {
-	setGroundFunction([](float x) -> float { return 2.9f; });
+	setGroundFunction(0.0f, 2.6f, [](float x) -> float { return sin(x - 1) + 4; });
+	setGroundFunction(2.6f, 10.4f, [](float x) -> float { return (pow(sin((x - 6.5f) / 2.5f), 2) + 29) / 6; });
+	setGroundFunction(10.4f, 14.0f, [](float x) -> float { return pow(e, -pow(((x / 2) - 6.8f), 4)) + 5; });
+	setGroundFunction(14.0f, 19.0f, [](float x) -> float { return 2.5f * pow(e, (-pow((x - 14), 2)) / 5) + 3.5; });
+	setGroundFunction(19.0f, 21.5f, [](float x) -> float { return -(pow((x - 19), 3) / 10) + 3.52f; });
+	setGroundFunction(21.5f, 24.0f, [](float x) -> float { return pow(x - 22, 2) + 1.71f; });
+	setGroundFunction(24.0f, 27.0f, [](float x) -> float { return 2 * pow(e, -pow((x - 26.5), 4) / 100) + 4.36f; });
+	setGroundFunction(27.0f, 32.0f, [](float x) -> float { return pow(e, -pow(x - 28.9, 2)) + 6.33f; });
+	setGroundFunction(32.0f, 34.0f, [](float x) -> float { return (pow(x - 32, 2) / 6 ) + 6.33f; });
 
 	SETCOLOR(m_brush_background.fill_color, 1.0f, 1.0f, 1.0f);
 	m_brush_background.fill_opacity = 1.0f;
@@ -127,17 +138,19 @@ std::vector<Box>& Level::getBlocks()
 	return m_blocks;
 }
 
-void Level::setGroundFunction(std::function<float(float)> func)
+void Level::setGroundFunction(float start_x, float end_x, std::function<float(float)> func)
 {
-	m_ground_function = func;
+	m_ground_functions.push_back({ start_x, end_x, func });
 }
 
 float Level::getGroundLevel(float x)
 {
-	if (m_ground_function) {
-		return m_ground_function(x);
+	for (const auto& gf : m_ground_functions) {
+		if (x >= gf.start_x && x <= gf.end_x) {
+			return gf.func(x);  // Evaluate the corresponding ground function
+		}
 	}
-	return 0.0f;  // Default ground level if no function is set
+	return 0.0f;  // Default ground level if no function is defined for the range
 }
 
 void Level::drawBlock(int i)

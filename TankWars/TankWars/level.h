@@ -8,6 +8,12 @@
 #include <functional>
 
 
+struct GroundFunction {
+	float start_x; // Start of the range
+	float end_x;   // End of the range
+	std::function<float(float)> func; // The ground function for this range
+};
+
 class Level : public GameObject
 {
 	graphics::Brush m_brush_background;
@@ -35,7 +41,7 @@ class Level : public GameObject
 	std::vector<Box> m_blocks;
 	std::vector<std::string> m_block_names;
 
-	std::function<float(float)> m_ground_function; // Function representing the ground-level
+	std::vector<GroundFunction> m_ground_functions; // Multiple ground functions representing the ground-level
 
 	void drawBlock(int i);
 	void checkCollisions();
@@ -52,6 +58,6 @@ public:
 	void addBlocks(float m_pos_x, float m_pos_y, float m_width, float m_height);
 	void removeBlocks();
 
-	void setGroundFunction(std::function<float(float)> func);
+	void setGroundFunction(float start_x, float end_x, std::function<float(float)> func);
 	float getGroundLevel(float x);
 };
