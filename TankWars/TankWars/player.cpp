@@ -26,9 +26,6 @@ void Player::init()
 	}
 	m_pos_y = 2.87f;
 
-	m_width = 0.78f;  // x is 2.62 times the y
-	m_height = 0.3f;
-
 	// m_state->m_global_offset_x = m_state->getCanvasWidth() / 2.0f - m_pos_x;
 	// m_state->m_global_offset_y = m_state->getCanvasHeight() / 2.0f - m_pos_y;
 
@@ -50,6 +47,9 @@ void Player::init()
 
 void Player::draw()
 {
+	float x = m_pos_x + m_state->m_global_offset_x;
+	float y = m_pos_y + m_state->m_global_offset_y;
+
 	// Find the correct sprint based on the cannon degrees
 	if (m_cannon_degrees < 10.0f) {
 		m_brush_player.texture = m_sprites[0];
@@ -82,7 +82,8 @@ void Player::draw()
 	// Flip the tank along the x-axis for the right player
 	if (not m_isLeftPlayer)
 		graphics::setScale(-1.0f, 1.0f);
-	graphics::drawRect(m_pos_x, m_pos_y, m_width, m_height, m_brush_player);
+
+	graphics::drawRect(x, y, m_width, m_height, m_brush_player);
 	graphics::resetPose();
 
 	// Draw Cannonball
@@ -158,30 +159,33 @@ void Player::update(float dt)
 		m_shield->update(dt);
 	}
 
-	// if (isLeftPlayer == m_state->getIsLeftTurn()) {
-	// 	m_state->getPlayerRight()->m_pos_x = m_state->getCanvasWidth() / 2.0f;
-	// }
-	// else {
-	// 	m_state->getPlayerLeft()->m_pos_x = m_state->getCanvasWidth() / 2.0f;
-	// }
+	if (m_state->getIsLeftTurn()) {
+		
+	}
+	else {
+		m_state->getPlayerLeft()->m_pos_x = m_state->getCanvasWidth() / 2.0f;
+	}
 
 	GameObject::update(dt);
 }
 
 void Player::debugDraw()
 {
+	float x = m_pos_x + m_state->m_global_offset_x;
+	float y = m_pos_y + m_state->m_global_offset_y;
+
 	graphics::Brush debug_brush;
 	SETCOLOR(debug_brush.fill_color, 1, 0.3f, 0);
 	SETCOLOR(debug_brush.outline_color, 1, 0.1f, 0);
 	debug_brush.fill_opacity = 0.1f;
 	debug_brush.outline_opacity = 1.0f;
-	graphics::drawRect(m_pos_x, m_pos_y, m_width, m_height, debug_brush);
+	graphics::drawRect(x, y, m_width, m_height, debug_brush);
 
 	char s[20];
-	sprintf_s(s, "(%5.2f, %5.2f)", m_pos_x, m_pos_y);
+	sprintf_s(s, "(%5.2f, %5.2f)", x, y);
 	SETCOLOR(debug_brush.fill_color, 1, 0, 0);
 	debug_brush.fill_opacity = 1.0f;
-	graphics::drawText(m_pos_x - 0.5f * m_width, m_pos_y - 0.7f * m_height, 0.15f, s, debug_brush);
+	graphics::drawText(x - 0.5f * m_width, y - 0.7f * m_height, 0.15f, s, debug_brush);
 }
 
 void Player::setCannonDegrees(float degrees)

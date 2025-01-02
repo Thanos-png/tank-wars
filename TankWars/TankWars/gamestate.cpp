@@ -54,6 +54,10 @@ void GameState::update(float dt)
 	if (!m_current_level)
 		return;
 
+	// Update offsets dynamically
+	// m_global_offset_x += 0.01f * dt; // Adjust based on game logic
+	// m_global_offset_y += 0.01f * dt; // Adjust based on game logic
+
 	m_current_level->update(dt);
 
 	m_debugging = graphics::getKeyState(graphics::SCANCODE_0);

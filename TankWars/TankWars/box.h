@@ -6,7 +6,8 @@
 struct Box
 {
     bool isShield = false;
-    bool isBase = false;
+    bool isLeftBase = false;
+    bool isRightBase = false;
 
     float m_pos_x  = 0.0f;
     float m_pos_y  = 0.0f;

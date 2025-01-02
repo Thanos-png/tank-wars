@@ -38,12 +38,17 @@ void Shield::init()
 	m_brush_shield.texture = m_state->getInstance()->getFullAssetPath("shield.png");
 
 	// Add Shield to m_blocks for collision checking in Level
-	m_state->getCurrentLevel()->addBlocks(m_pos_x, m_pos_y, m_width, m_height);
+	float x = m_pos_x + m_state->m_global_offset_x;
+	float y = m_pos_y + m_state->m_global_offset_y;
+	m_state->getCurrentLevel()->addBlocks(x, y, m_width, m_height);
 }
 
 void Shield::draw()
 {
-	graphics::drawRect(getPosX(), getPosY(), m_width, m_height, m_brush_shield);
+	float x = getPosX() + m_state->m_global_offset_x;
+	float y = getPosY() + m_state->m_global_offset_y;
+
+	graphics::drawRect(x, y, m_width, m_height, m_brush_shield);
 
 	if (m_state->m_debugging)
 		debugDraw();
@@ -104,12 +109,15 @@ Shield* Shield::getInstance()
 
 void Shield::debugDraw()
 {
+	float x = m_pos_x + m_state->m_global_offset_x;
+	float y = m_pos_y + m_state->m_global_offset_y;
+
 	graphics::Brush debug_brush;
 	SETCOLOR(debug_brush.fill_color, 1, 0.3f, 0);
 	SETCOLOR(debug_brush.outline_color, 1, 0.1f, 0);
 	debug_brush.fill_opacity = 0.1f;
 	debug_brush.outline_opacity = 1.0f;
-	graphics::drawRect(m_pos_x, m_pos_y, m_width, m_height, debug_brush);
+	graphics::drawRect(x, y, m_width, m_height, debug_brush);
 }
 
 Shield* Shield::m_unique_instance = nullptr;

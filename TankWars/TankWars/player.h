@@ -14,6 +14,9 @@ class Player : public GameObject, public Box
 	graphics::Brush m_brush_player;
 	std::vector<std::string> m_sprites;
 
+	float m_width = 0.78f;  // x is 2.62 times the y
+	float m_height = 0.3f;
+
 	bool m_shootingFlag = false;
 	int m_shield_amount = 2;
 	bool m_deployed_shield = false;
