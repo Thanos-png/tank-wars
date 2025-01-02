@@ -73,9 +73,12 @@ void Level::draw()
 		drawBlock(i);
 
 	// Draw score
-	// char score[20];
-	// sprintf_s(score, "Score: %d", m_score);
-	// graphics::drawText(0.15f, 0.3f, 0.3f, score, m_score_brush);
+	char score[20];
+	sprintf_s(score, "Score: %d", m_score_left);
+	graphics::drawText(0.15f, 0.3f, 0.3f, score, m_score_brush);
+
+	sprintf_s(score, "Score: %d", m_score_right);
+	graphics::drawText(10.6f, 0.3f, 0.3f, score, m_score_brush);
 
 	for (auto p_gob : m_static_objects)
 		if (p_gob) p_gob->draw();
@@ -201,7 +204,7 @@ void Level::checkCollisions()
 			}
 
 			// Destroy Base
-			if (badjustedBoxox.isLeftBase) {
+			if (adjustedBox.isLeftBase) {
 				m_left_base_health -= 1;
 				if (m_left_base_health <= 0) {
 					// Find and remove the right base from m_blocks
@@ -293,21 +296,48 @@ void Level::checkCollisions()
 
 		// Check for the left player's collision
 		if (offset = m_state->getPlayerLeft()->intersectSideways(box) and m_state->getIsLeftTurn()) {
-			std::cout << "X: " << m_state->getPlayerLeft()->m_pos_x << " Y: " << m_state->getPlayerLeft()->m_pos_y << std::endl;
 			m_state->getPlayerLeft()->m_pos_x += offset;
-			m_state->m_global_offset_x += offset;
 			break;
 		}
 
 		// Check for the right player's collision
 		if (offset = m_state->getPlayerRight()->intersectSideways(box) and not m_state->getIsLeftTurn()) {
 			m_state->getPlayerRight()->m_pos_x += offset;
-			m_state->m_global_offset_x += offset;
 			break;
 		}
 	}
 	*/
-	
+
+	// Check if the shot collides with the enemy player
+	float player_x = m_state->getPlayerRight()->getPosX();
+	float player_y = m_state->getPlayerRight()->getPosY();
+	float player_width = m_state->getPlayerRight()->getWidth();
+	float player_height = m_state->getPlayerRight()->getHeight();
+	Box player_right = Box(player_x, player_y, player_width, player_height);
+	if (m_state->getIsLeftTurn() and m_state->getPlayerLeft()->getShotInstance()->isActive() and
+		m_state->getPlayerLeft()->getShotInstance()->intersect(player_right) and m_state->getPlayerLeft()->getShootingFlag()) {
+
+		m_state->getPlayerLeft()->getShotInstance()->reset();
+		m_score_left += 1;
+
+		graphics::playSound(m_state->getFullAssetPath("ground-collision.wav"), 0.5f);
+		return;
+	}
+
+	player_x = m_state->getPlayerLeft()->getPosX();
+	player_y = m_state->getPlayerLeft()->getPosY();
+	player_width = m_state->getPlayerLeft()->getWidth();
+	player_height = m_state->getPlayerLeft()->getHeight();
+	Box player_left = Box(player_x, player_y, player_width, player_height);
+	if (not m_state->getIsLeftTurn() and m_state->getPlayerRight()->getShotInstance()->isActive() and
+		m_state->getPlayerRight()->getShotInstance()->intersect(player_left) and m_state->getPlayerRight()->getShootingFlag()) {
+
+		m_state->getPlayerRight()->getShotInstance()->reset();
+		m_score_right += 1;
+
+		graphics::playSound(m_state->getFullAssetPath("ground-collision.wav"), 0.5f);
+		return;
+	}
 
 	// Check for ground collision
 	if (m_state->getPlayerLeft()->getShotInstance()->isActive() and m_state->getPlayerLeft()->getShootingFlag()) {

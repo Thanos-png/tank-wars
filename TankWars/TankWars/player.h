@@ -31,6 +31,11 @@ public:
 	void draw() override;
 	void update(float dt) override;
 
+	float& getPosX() { return m_pos_x; }
+	float& getPosY() { return m_pos_y; }
+	float& getWidth() { return m_width; }
+	float& getHeight() { return m_height; }
+
 	void setCannonDegrees(float degrees);
 	float getCannonDegrees();
 	void setShootingFlag(bool flag);

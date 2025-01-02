@@ -18,7 +18,8 @@ class Level : public GameObject
 	std::vector<GameObject*> m_static_objects;
 	std::list<GameObject*> m_dynamic_objects;
 
-	int m_score = 0;
+	int m_score_left = 0;
+	int m_score_right = 0;
 	int m_left_base_health = 2;
 	int m_right_base_health = 2;
 
