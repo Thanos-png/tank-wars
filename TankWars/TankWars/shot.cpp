@@ -158,11 +158,17 @@ void Shot::shotBullet(float dt)
 
 // Circle-Box Collision Detection
 bool Shot::intersect(Box& other) {
-	float closest_x = clamp(m_pos_x, other.m_pos_x - other.m_width / 2.0f, other.m_pos_x + other.m_width / 2.0f);
-	float closest_y = clamp(m_pos_y, other.m_pos_y - other.m_height / 2.0f, other.m_pos_y + other.m_height / 2.0f);
+	// Adjust shot position with offsets
+	float adjusted_x = m_pos_x + m_state->m_global_offset_x;
+	float adjusted_y = m_pos_y + m_state->m_global_offset_y;
 
-	float distance_x = m_pos_x - closest_x;
-	float distance_y = m_pos_y - closest_y;
+	// Calculate the closest point on the box to the circle
+	float closest_x = clamp(adjusted_x, other.m_pos_x - other.m_width / 2.0f, other.m_pos_x + other.m_width / 2.0f);
+	float closest_y = clamp(adjusted_y, other.m_pos_y - other.m_height / 2.0f, other.m_pos_y + other.m_height / 2.0f);
+
+	// Calculate the distance between the circle's center and this closest point
+	float distance_x = adjusted_x - closest_x;
+	float distance_y = adjusted_y - closest_y;
 
 	return (distance_x * distance_x + distance_y * distance_y) < (radius * radius);
 }

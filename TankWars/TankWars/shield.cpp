@@ -31,16 +31,12 @@ void Shield::init()
 	if (m_state->getPlayerRight()->isActive() and not m_state->getIsLeftTurn())
 		offset *= -1.0f;
 	m_pos_x += offset;
+	m_pos_y = m_state->getCurrentLevel()->getGroundLevel(m_pos_x) - 0.2f;
 
 	SETCOLOR(m_brush_shield.fill_color, 1.0f, 1.0f, 1.0f);
 	m_brush_shield.fill_opacity = 1.0f;
 	m_brush_shield.outline_opacity = 0.0f;
 	m_brush_shield.texture = m_state->getInstance()->getFullAssetPath("shield.png");
-
-	// Add Shield to m_blocks for collision checking in Level
-	float x = m_pos_x + m_state->m_global_offset_x;
-	float y = m_pos_y + m_state->m_global_offset_y;
-	m_state->getCurrentLevel()->addBlocks(x, y, m_width, m_height);
 }
 
 void Shield::draw()
@@ -91,9 +87,6 @@ void Shield::reset()
 		m_state->getPlayerLeft()->decreaseShieldAmount();
 	if (m_state->getPlayerRight()->isActive() and not m_state->getIsLeftTurn())
 		m_state->getPlayerRight()->decreaseShieldAmount();
-
-	// Remove shield from m_blocks in the Level
-	// m_state->getCurrentLevel()->removeBlocks();
 
 	// Deactivate the shield
 	setActive(false);

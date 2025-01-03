@@ -54,9 +54,15 @@ void GameState::update(float dt)
 	if (!m_current_level)
 		return;
 
-	// Update offsets dynamically
-	// m_global_offset_x += 0.01f * dt; // Adjust based on game logic
-	// m_global_offset_y += 0.01f * dt; // Adjust based on game logic
+	// Calculate global offset based on the active player
+	if (getIsLeftTurn() and m_playerLeft) {
+		m_global_offset_x = getCanvasWidth() / 2.0f - m_playerLeft->getPosX();
+		m_global_offset_y = getCanvasHeight() / 2.0f - m_playerLeft->getPosY();
+	}
+	else if (not getIsLeftTurn() and m_playerRight) {
+		m_global_offset_x = getCanvasWidth() / 2.0f - m_playerRight->getPosX();
+		m_global_offset_y = getCanvasHeight() / 2.0f - m_playerRight->getPosY();
+	}
 
 	m_current_level->update(dt);
 

@@ -16,7 +16,7 @@ class Shot : public GameObject, public Box {
 	// So we are gona use this function to convert the value to the ones we want.  gravity_function(x) = -0.28 * x + 30
 	const float m_gravity = 5.0f;
 	const float m_accel_vertical = 6.0f;
-	const float m_accel_horizontal = 13.0f;  // 21.0f
+	const float m_accel_horizontal = 11.0f;  // 21.0f
 	const float m_max_velocity = 3.0f;
 
 public:

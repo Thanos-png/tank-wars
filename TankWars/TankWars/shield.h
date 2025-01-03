@@ -29,6 +29,8 @@ public:
 
 	float& getPosX() { return m_pos_x; }
 	float& getPosY() { return m_pos_y; }
+	float& getWidth() { return m_width; }
+	float& getHeight() { return m_height; }
 
 	static Shield* getInstance();
 

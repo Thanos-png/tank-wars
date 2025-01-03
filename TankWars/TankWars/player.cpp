@@ -24,7 +24,14 @@ void Player::init()
 	else {
 		m_pos_x = 10.0f;
 	}
-	m_pos_y = 2.87f;
+	
+	// Calculate m_pos_y based on the ground level at m_pos_x
+	if (m_state && m_state->getCurrentLevel()) {
+		m_pos_y = m_state->getCurrentLevel()->getGroundLevel(m_pos_x);
+	}
+	else {
+		m_pos_y = 3.0f; // Default value if level or state is not properly set
+	}
 
 	// m_state->m_global_offset_x = m_state->getCanvasWidth() / 2.0f - m_pos_x;
 	// m_state->m_global_offset_y = m_state->getCanvasHeight() / 2.0f - m_pos_y;
@@ -159,12 +166,15 @@ void Player::update(float dt)
 		m_shield->update(dt);
 	}
 
-	if (m_state->getIsLeftTurn()) {
-		
+	// Calculate m_pos_y based on the ground level at m_pos_x
+	if (m_state && m_state->getCurrentLevel()) {
+		m_pos_y = m_state->getCurrentLevel()->getGroundLevel(m_pos_x);
 	}
 	else {
-		m_state->getPlayerLeft()->m_pos_x = m_state->getCanvasWidth() / 2.0f;
+		m_pos_y = 3.0f; // Default value if level or state is not properly set
 	}
+
+	// m_state->m_global_offset_x = m_pos_x;
 
 	GameObject::update(dt);
 }
