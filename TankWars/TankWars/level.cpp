@@ -22,20 +22,26 @@ const float e = 2.71828f;
 
 void Level::init()
 {
-	setGroundFunction(0.0f, 2.6f, [](float x) -> float { return sin(x - 1) + 4; });
+	setGroundFunction(0.0f, 2.6f, [](float x) -> float { return sin(x - 1.2f) + 4; });
 	setGroundFunction(2.6f, 10.4f, [](float x) -> float { return (pow(sin((x - 6.5f) / 2.5f), 2) + 29) / 6; });
-	setGroundFunction(10.4f, 14.0f, [](float x) -> float { return pow(e, -pow(((x / 2) - 6.8f), 4)) + 5; });
-	setGroundFunction(14.0f, 19.0f, [](float x) -> float { return 2.5f * pow(e, (-pow((x - 14), 2)) / 5) + 3.5; });
-	setGroundFunction(19.0f, 21.5f, [](float x) -> float { return -(pow((x - 19), 3) / 10) + 3.52f; });
-	setGroundFunction(21.5f, 24.0f, [](float x) -> float { return pow(x - 22, 2) + 1.71f; });
-	setGroundFunction(24.0f, 27.0f, [](float x) -> float { return 2 * pow(e, -pow((x - 26.5), 4) / 100) + 4.36f; });
-	setGroundFunction(27.0f, 32.0f, [](float x) -> float { return pow(e, -pow(x - 28.9, 2)) + 6.33f; });
-	setGroundFunction(32.0f, 34.0f, [](float x) -> float { return (pow(x - 32, 2) / 6 ) + 6.33f; });
+	setGroundFunction(10.4f, 14.0f, [](float x) -> float { return 1.1f * pow(e, -pow(((x / 2) - 6.8f), 4)) + 5; });
+	setGroundFunction(14.0f, 19.0f, [](float x) -> float { return 2.75f * pow(e, (-pow((x - 14), 2)) / 5) + 3.35f; });
+	setGroundFunction(19.0f, 21.1f, [](float x) -> float { return -(pow((x - 19), 3) / 7) + 3.36f; });
+	setGroundFunction(21.1f, 21.7f, [](float x) -> float { return 0.8f * pow(x - 21.9f, 2) + 1.45f; });
+	setGroundFunction(21.7f, 23.87f, [](float x) -> float { return 1.25f * pow(x - 22, 2) + 1.4f; });
+	setGroundFunction(23.87f, 27.0f, [](float x) -> float { return 2 * pow(e, -pow((x - 26.5f), 4) / 100) + 4.5f; });
+	setGroundFunction(27.0f, 32.0f, [](float x) -> float { return 1.1f * pow(e, -pow(x - 28.7f, 2)) + 6.45f; });
+	setGroundFunction(32.0f, 34.0f, [](float x) -> float { return (pow(x - 32, 2) / 4 ) + 6.45f; });
 
 	SETCOLOR(m_brush_background.fill_color, 1.0f, 1.0f, 1.0f);
 	m_brush_background.fill_opacity = 1.0f;
 	m_brush_background.outline_opacity = 0.0f;
 	m_brush_background.texture = m_state->getInstance()->getFullAssetPath("background.png");
+
+	SETCOLOR(m_brush_foreground.fill_color, 1.0f, 1.0f, 1.0f);
+	m_brush_foreground.fill_opacity = 1.0f;
+	m_brush_foreground.outline_opacity = 0.0f;
+	m_brush_foreground.texture = m_state->getInstance()->getFullAssetPath("ground-function.png");
 
 	for (auto p_gob : m_static_objects)
 		if (p_gob) p_gob->init();
@@ -43,11 +49,11 @@ void Level::init()
 	for (auto p_gob : m_dynamic_objects)
 		if (p_gob) p_gob->init();
 
-	Box leftBase = Box(2, 2.45f, m_block_size_x, m_block_size_y);
+	Box leftBase = Box(6, 0.45f, m_block_size_x, m_block_size_y);
 	leftBase.isLeftBase = true;
 	m_blocks.push_back(leftBase);
 
-	Box rightBase = Box(10, 2.45f, m_block_size_x, m_block_size_y);
+	Box rightBase = Box(31.5f, 0.45f, m_block_size_x, m_block_size_y);
 	rightBase.isRightBase = true;
 	m_blocks.push_back(rightBase);
 	
@@ -62,16 +68,19 @@ void Level::init()
 
 void Level::draw()
 {
-	float w = m_state->getCanvasWidth();
-	float h = m_state->getCanvasHeight();
+	float w = 2.82f * m_state->getCanvasWidth();
+	float h = 2.86f * m_state->getCanvasHeight();
 
-	float offset_x = m_state->m_global_offset_x / 4.0f + w / 2.0f;
-	float offset_y = m_state->m_global_offset_y / 4.0f + h / 2.0f;
+	float background_offset_x = m_state->m_global_offset_x / 5.0f + w / 2.5f;
+	float background_offset_y = m_state->m_global_offset_y / 5.0f + h / 3.5f;
+	float foreground_offset_x = m_state->m_global_offset_x + w / 2.0f;
+	float foreground_offset_y = m_state->m_global_offset_y + h / 2.0f;
 
 	// Draw background
-	graphics::drawRect(offset_x, offset_y, w, h, m_brush_background);
+	graphics::drawRect(background_offset_x, background_offset_y, w, h, m_brush_background);
 
-	// Add clouds and stuff
+	// Draw foreground
+	graphics::drawRect(foreground_offset_x, foreground_offset_y, w, h, m_brush_foreground);
 
 	// Draw Players
 	if (m_state->getPlayerLeft()->isActive())
@@ -98,7 +107,7 @@ void Level::draw()
 		if (p_gob) p_gob->draw();
 
 	// graphics::Brush m_brush_testing;
-	// graphics::drawRect(0, 6, 1, 1, m_brush_testing);
+	// graphics::drawRect(2, 2.45f, 1, 0.2f, m_brush_testing);
 }
 
 void Level::update(float dt)
@@ -319,7 +328,7 @@ void Level::checkCollisions()
 	}
 
 	float left_player_x = m_state->getPlayerLeft()->getPosX() + m_state->m_global_offset_x;
-	float left_player_y = m_state->getPlayerLeft()->getPosY() + m_state->m_global_offset_x;
+	float left_player_y = m_state->getPlayerLeft()->getPosY() + m_state->m_global_offset_y;
 	float left_player_width = m_state->getPlayerLeft()->getWidth();
 	float left_player_height = m_state->getPlayerLeft()->getHeight();
 	Box player_left = Box(left_player_x, left_player_y, left_player_width, left_player_height);

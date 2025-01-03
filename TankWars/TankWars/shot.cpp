@@ -47,10 +47,10 @@ void Shot::draw()
 
 void Shot::update(float dt)
 {
-	shotBullet(dt);  // -------------------------------------------------------------------------------
+	shotBullet(dt);
 
-	// m_state->m_global_offset_x = m_state->getCanvasWidth() / 2.0f - m_pos_x;
-	// m_state->m_global_offset_y = m_state->getCanvasHeight() / 2.0f - m_pos_y;
+	m_state->m_global_offset_x = m_state->getCanvasWidth() / 2.0f - m_pos_x;
+	m_state->m_global_offset_y = m_state->getCanvasHeight() / 2.0f - m_pos_y;
 
 	// In case the shot has bugged and gone below the surface
 	if (m_pos_y >= 20.0f) {
@@ -78,8 +78,11 @@ void Shot::reset()
 	if (m_state->getPlayerRight()->isActive() and not m_state->getIsLeftTurn())
 		m_state->getPlayerRight()->setShootingFlag(false);
 
-	// Deactivate the shield
+	// Deactivate the shot
 	setActive(false);
+
+	// Change the turn
+	m_state->updateIsLeftTurn();
 }
 
 void Shot::setCannonDegrees(float cannonDegrees)

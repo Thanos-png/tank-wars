@@ -17,6 +17,7 @@ struct GroundFunction {
 class Level : public GameObject
 {
 	graphics::Brush m_brush_background;
+	graphics::Brush m_brush_foreground;
 	graphics::Brush m_block_brush;
 	graphics::Brush m_block_brush_debug;
 	graphics::Brush m_score_brush;

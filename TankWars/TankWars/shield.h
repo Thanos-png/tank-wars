@@ -10,7 +10,7 @@ class Shield : public GameObject, public Box {
 	static Shield* m_unique_instance;
 
 	float offset = 0.6f;
-	float m_width = 0.15f;
+	float m_width = 0.2f;
 	float m_height = 0.7f;
 
 	bool m_isLeftPlayer = false;

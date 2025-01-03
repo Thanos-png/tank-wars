@@ -19,10 +19,10 @@ Player::~Player()
 void Player::init()
 {
 	if (m_isLeftPlayer) {
-		m_pos_x = 2.0f;
+		m_pos_x = 6.0f;
 	}
 	else {
-		m_pos_x = 10.0f;
+		m_pos_x = 31.5f;
 	}
 	
 	// Calculate m_pos_y based on the ground level at m_pos_x
@@ -116,9 +116,9 @@ void Player::update(float dt)
 	const float velocity = 0.8f;
 
 	if (not m_shootingFlag) {  // Don't update the position or the cannon degrees during firing
-		if (graphics::getKeyState(graphics::SCANCODE_A))
+		if (graphics::getKeyState(graphics::SCANCODE_A) and m_pos_x > 0.1f)
 			m_pos_x -= velocity * delta_time;
-		if (graphics::getKeyState(graphics::SCANCODE_D))
+		if (graphics::getKeyState(graphics::SCANCODE_D) and m_pos_x < 33.6f)
 			m_pos_x += velocity * delta_time;
 		if (graphics::getKeyState(graphics::SCANCODE_W) and m_cannon_degrees < 80.0f)
 			m_cannon_degrees += 7 * velocity * delta_time;
