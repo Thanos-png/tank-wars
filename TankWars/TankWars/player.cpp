@@ -174,8 +174,6 @@ void Player::update(float dt)
 		m_pos_y = 3.0f; // Default value if level or state is not properly set
 	}
 
-	// m_state->m_global_offset_x = m_pos_x;
-
 	GameObject::update(dt);
 }
 

@@ -16,22 +16,17 @@ void Shield::init()
 	isShield = true;
 
 	if (m_state->getPlayerLeft()->isActive() and m_state->getIsLeftTurn()) {
-		m_pos_x = m_state->getPlayerLeft()->m_pos_x;
-		m_pos_y = m_state->getPlayerLeft()->m_pos_y;
+		m_pos_x = m_state->getPlayerLeft()->getPosX() + offset;
+		m_pos_y = m_state->getCurrentLevel()->getGroundLevel(m_pos_x) - 0.2f;
 
 		m_isLeftPlayer = true;
 	}
 	if (m_state->getPlayerRight()->isActive() and not m_state->getIsLeftTurn()) {
-		m_pos_x = m_state->getPlayerRight()->m_pos_x;
-		m_pos_y = m_state->getPlayerRight()->m_pos_y;
+		m_pos_x = m_state->getPlayerRight()->getPosX() - offset;
+		m_pos_y = m_state->getCurrentLevel()->getGroundLevel(m_pos_x) - 0.2f;
 
 		m_isLeftPlayer = false;
 	}
-
-	if (m_state->getPlayerRight()->isActive() and not m_state->getIsLeftTurn())
-		offset *= -1.0f;
-	m_pos_x += offset;
-	m_pos_y = m_state->getCurrentLevel()->getGroundLevel(m_pos_x) - 0.2f;
 
 	SETCOLOR(m_brush_shield.fill_color, 1.0f, 1.0f, 1.0f);
 	m_brush_shield.fill_opacity = 1.0f;
@@ -111,6 +106,12 @@ void Shield::debugDraw()
 	debug_brush.fill_opacity = 0.1f;
 	debug_brush.outline_opacity = 1.0f;
 	graphics::drawRect(x, y, m_width, m_height, debug_brush);
+
+	char s[20];
+	sprintf_s(s, "(%5.2f, %5.2f)", x, y);
+	SETCOLOR(debug_brush.fill_color, 1, 0, 0);
+	debug_brush.fill_opacity = 1.0f;
+	graphics::drawText(x - 1.7f * m_width, y - 0.7f * m_height, 0.15f, s, debug_brush);
 }
 
 Shield* Shield::m_unique_instance = nullptr;
