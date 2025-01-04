@@ -41,12 +41,12 @@ void Player::init()
 	m_brush_player.outline_opacity = 0.0f;
 	m_brush_player.texture = m_state->getInstance()->getFullAssetPath("tank0.png");
 
+	// Each sprite covers 5 degrees
 	m_sprites.push_back(m_state->getInstance()->getFullAssetPath("tank0.png"));
 	m_sprites.push_back(m_state->getInstance()->getFullAssetPath("tank5.png"));
 	m_sprites.push_back(m_state->getInstance()->getFullAssetPath("tank10.png"));
 	m_sprites.push_back(m_state->getInstance()->getFullAssetPath("tank15.png"));
 	m_sprites.push_back(m_state->getInstance()->getFullAssetPath("tank20.png"));
-	m_sprites.push_back(m_state->getInstance()->getFullAssetPath("tank25.png"));
 	m_sprites.push_back(m_state->getInstance()->getFullAssetPath("tank25.png"));
 	m_sprites.push_back(m_state->getInstance()->getFullAssetPath("tank30.png"));
 	m_sprites.push_back(m_state->getInstance()->getFullAssetPath("tank35.png"));
@@ -57,7 +57,6 @@ void Player::init()
 	m_sprites.push_back(m_state->getInstance()->getFullAssetPath("tank-10.png"));
 	m_sprites.push_back(m_state->getInstance()->getFullAssetPath("tank-15.png"));
 	m_sprites.push_back(m_state->getInstance()->getFullAssetPath("tank-20.png"));
-	m_sprites.push_back(m_state->getInstance()->getFullAssetPath("tank-25.png"));
 	m_sprites.push_back(m_state->getInstance()->getFullAssetPath("tank-25.png"));
 	m_sprites.push_back(m_state->getInstance()->getFullAssetPath("tank-30.png"));
 	m_sprites.push_back(m_state->getInstance()->getFullAssetPath("tank-35.png"));
@@ -71,41 +70,47 @@ void Player::draw()
 	float x = m_pos_x + m_state->m_global_offset_x;
 	float y = m_pos_y + m_state->m_global_offset_y;
 
-	// Find the correct sprint based on the gradient of the ground
-	/*
-	if (m_cannon_degrees < 10.0f) {
-		m_brush_player.texture = m_sprites[0];
+	// Calculate the gradient at the player's position
+	float gradient = 0.0f;
+	if (m_state and m_state->getCurrentLevel()) {
+		gradient = m_state->getCurrentLevel()->getGroundGradient(m_pos_x);
 	}
-	else if (m_cannon_degrees < 20.0f) {
-		m_brush_player.texture = m_sprites[1];
+
+	// Convert gradient to degrees
+	float angle = atan(gradient) * 180.0f / 3.14159f;
+
+	// Flip the angle for the right player
+	if (not m_isLeftPlayer) {
+		angle = -angle;
 	}
-	else if (m_cannon_degrees < 30.0f) {
-		m_brush_player.texture = m_sprites[2];
+
+	// Clamp the angle to the range of available sprites
+	int spriteIndex = 0;
+	if (angle >= -54.9f and angle <= 54.9f) {
+		if (angle >= 0.0f) {
+			// Positive angles (e.g., 0 to 50 degrees)
+			spriteIndex = static_cast<int>(angle / 5);
+		}
+		else {
+			// Small negative angles (-0.01 to -4.99) should map to the 0-degree sprite
+			if (angle > -5.0f) {
+				spriteIndex = 0;
+			}
+			else {
+				// Larger negative angles (-5 to -50 degrees)
+				spriteIndex = static_cast<int>((-angle / 5) + 10);
+			}
+		}
 	}
-	else if (m_cannon_degrees < 40.0f) {
-		m_brush_player.texture = m_sprites[3];
-	}
-	else if (m_cannon_degrees < 50.0f) {
-		m_brush_player.texture = m_sprites[4];
-	}
-	else if (m_cannon_degrees < 60.0f) {
-		m_brush_player.texture = m_sprites[5];
-	}
-	else if (m_cannon_degrees < 70.0f) {
-		m_brush_player.texture = m_sprites[6];
-	}
-	else if (m_cannon_degrees < 80.0f) {
-		m_brush_player.texture = m_sprites[7];
-	}
-	else if (m_cannon_degrees >= 80.0f) {
-		m_brush_player.texture = m_sprites[8];
-	}
-	*/
+
+	// Set the appropriate texture
+	m_brush_player.texture = m_sprites[spriteIndex];
 
 	// Flip the tank along the x-axis for the right player
 	if (not m_isLeftPlayer)
 		graphics::setScale(-1.0f, 1.0f);
 
+	// Draw the tank
 	graphics::drawRect(x + 0.05f, y - 0.11f, 1.2 * m_width, 1.2 * m_height, m_brush_player);
 	graphics::resetPose();
 
@@ -131,23 +136,34 @@ void Player::update(float dt)
 	float delta_time = dt / 1000.0f;
 	const float velocity = 0.8f;
 
-	if (not m_shootingFlag) {  // Don't update the position or the cannon degrees during firing
-		if (graphics::getKeyState(graphics::SCANCODE_A) and m_pos_x > 0.1f)
+	// Calculate the gradient at the player's position
+	float gradient = 0.0f;
+	if (m_state && m_state->getCurrentLevel()) {
+		gradient = m_state->getCurrentLevel()->getGroundGradient(m_pos_x);
+	}
+
+	// Convert gradient to degrees
+	float angle = atan(gradient) * 180.0f / 3.14159f;
+
+	// Don't update the position during firing
+	// Or if gradient > 54.5 or gradient < -55.4 the ground is too steep for the tank to drive
+	if (not m_shootingFlag) {
+		if (graphics::getKeyState(graphics::SCANCODE_A) and m_pos_x > 0.1f and angle <= 54.5f)
 			m_pos_x -= velocity * delta_time;
-		if (graphics::getKeyState(graphics::SCANCODE_D) and m_pos_x < 33.6f)
+		if (graphics::getKeyState(graphics::SCANCODE_D) and m_pos_x < 33.6f and angle >= -54.5f)
 			m_pos_x += velocity * delta_time;
-		if (graphics::getKeyState(graphics::SCANCODE_W) and m_pos_x < 33.6f)
+		if (graphics::getKeyState(graphics::SCANCODE_W) and m_pos_x < 33.6f and angle >= -54.5f)
 			m_pos_x += velocity * delta_time;
-		if (graphics::getKeyState(graphics::SCANCODE_S) and m_pos_x > 0.1f)
+		if (graphics::getKeyState(graphics::SCANCODE_S) and m_pos_x > 0.1f and angle <= 54.5f)
 			m_pos_x -= velocity * delta_time;
 
-		if (graphics::getKeyState(graphics::SCANCODE_LEFT) and m_pos_x > 0.1f)
+		if (graphics::getKeyState(graphics::SCANCODE_LEFT) and m_pos_x > 0.1f and angle <= 54.5f)
 			m_pos_x -= velocity * delta_time;
-		if (graphics::getKeyState(graphics::SCANCODE_RIGHT) and m_pos_x < 33.6f)
+		if (graphics::getKeyState(graphics::SCANCODE_RIGHT) and m_pos_x < 33.6f and angle >= -54.5f)
 			m_pos_x += velocity * delta_time;
-		if (graphics::getKeyState(graphics::SCANCODE_UP) and m_pos_x < 33.6f)
+		if (graphics::getKeyState(graphics::SCANCODE_UP) and m_pos_x < 33.6f and angle >= -54.5f)
 			m_pos_x += velocity * delta_time;
-		if (graphics::getKeyState(graphics::SCANCODE_DOWN) and m_pos_x > 0.1f)
+		if (graphics::getKeyState(graphics::SCANCODE_DOWN) and m_pos_x > 0.1f and angle <= 54.5f)
 			m_pos_x -= velocity * delta_time;
 	}
 

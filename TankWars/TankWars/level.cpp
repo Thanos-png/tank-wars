@@ -139,6 +139,14 @@ float Level::getGroundLevel(float x)
 	return 0.0f;  // Default ground level if no function is defined for the range
 }
 
+float Level::getGroundGradient(float x)
+{
+	float epsilon = 0.01f; // Small step to calculate numerical derivative
+	float y1 = getGroundLevel(x - epsilon); // Ground level slightly to the left
+	float y2 = getGroundLevel(x + epsilon); // Ground level slightly to the right
+	return (y2 - y1) / (2 * epsilon); // Central difference method
+}
+
 void Level::drawBlock(int i)
 {
 	Box& box = m_blocks[i];
@@ -152,7 +160,6 @@ void Level::drawBlock(int i)
 		graphics::drawRect(x, y, m_block_size_x, m_block_size_y, m_block_brush_debug);
 }
 
-#include <iostream>
 void Level::checkCollisions()
 {
 	// Check if the shot collides with a Box
@@ -293,25 +300,6 @@ void Level::checkCollisions()
 			m_state->getPlayerRight()->m_pos_x += offset;
 		}
 	}
-
-	// Check if a player collides with a Box
-	/*
-	for (auto& box : m_blocks) {
-		offset = 0.0f;
-
-		// Check for the left player's collision
-		if (offset = m_state->getPlayerLeft()->intersectSideways(box) and m_state->getIsLeftTurn()) {
-			m_state->getPlayerLeft()->m_pos_x += offset;
-			break;
-		}
-
-		// Check for the right player's collision
-		if (offset = m_state->getPlayerRight()->intersectSideways(box) and not m_state->getIsLeftTurn()) {
-			m_state->getPlayerRight()->m_pos_x += offset;
-			break;
-		}
-	}
-	*/
 
 	// Check if the player's shot collides with the enemy player
 	float right_player_x = m_state->getPlayerRight()->getPosX() + m_state->m_global_offset_x;

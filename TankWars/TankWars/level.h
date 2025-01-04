@@ -56,4 +56,5 @@ public:
 
 	void setGroundFunction(float start_x, float end_x, std::function<float(float)> func);
 	float getGroundLevel(float x);
+	float getGroundGradient(float x);
 };
