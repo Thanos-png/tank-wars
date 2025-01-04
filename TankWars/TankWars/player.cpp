@@ -27,7 +27,7 @@ void Player::init()
 	
 	// Calculate m_pos_y based on the ground level at m_pos_x
 	if (m_state && m_state->getCurrentLevel()) {
-		m_pos_y = m_state->getCurrentLevel()->getGroundLevel(m_pos_x);
+		m_pos_y = m_state->getCurrentLevel()->getGroundLevel(m_pos_x) - 0.15f;
 	}
 	else {
 		m_pos_y = 3.0f; // Default value if level or state is not properly set
@@ -42,14 +42,28 @@ void Player::init()
 	m_brush_player.texture = m_state->getInstance()->getFullAssetPath("tank0.png");
 
 	m_sprites.push_back(m_state->getInstance()->getFullAssetPath("tank0.png"));
+	m_sprites.push_back(m_state->getInstance()->getFullAssetPath("tank5.png"));
 	m_sprites.push_back(m_state->getInstance()->getFullAssetPath("tank10.png"));
+	m_sprites.push_back(m_state->getInstance()->getFullAssetPath("tank15.png"));
 	m_sprites.push_back(m_state->getInstance()->getFullAssetPath("tank20.png"));
+	m_sprites.push_back(m_state->getInstance()->getFullAssetPath("tank25.png"));
+	m_sprites.push_back(m_state->getInstance()->getFullAssetPath("tank25.png"));
 	m_sprites.push_back(m_state->getInstance()->getFullAssetPath("tank30.png"));
+	m_sprites.push_back(m_state->getInstance()->getFullAssetPath("tank35.png"));
 	m_sprites.push_back(m_state->getInstance()->getFullAssetPath("tank40.png"));
+	m_sprites.push_back(m_state->getInstance()->getFullAssetPath("tank45.png"));
 	m_sprites.push_back(m_state->getInstance()->getFullAssetPath("tank50.png"));
-	m_sprites.push_back(m_state->getInstance()->getFullAssetPath("tank60.png"));
-	m_sprites.push_back(m_state->getInstance()->getFullAssetPath("tank70.png"));
-	m_sprites.push_back(m_state->getInstance()->getFullAssetPath("tank80.png"));
+	m_sprites.push_back(m_state->getInstance()->getFullAssetPath("tank-5.png"));
+	m_sprites.push_back(m_state->getInstance()->getFullAssetPath("tank-10.png"));
+	m_sprites.push_back(m_state->getInstance()->getFullAssetPath("tank-15.png"));
+	m_sprites.push_back(m_state->getInstance()->getFullAssetPath("tank-20.png"));
+	m_sprites.push_back(m_state->getInstance()->getFullAssetPath("tank-25.png"));
+	m_sprites.push_back(m_state->getInstance()->getFullAssetPath("tank-25.png"));
+	m_sprites.push_back(m_state->getInstance()->getFullAssetPath("tank-30.png"));
+	m_sprites.push_back(m_state->getInstance()->getFullAssetPath("tank-35.png"));
+	m_sprites.push_back(m_state->getInstance()->getFullAssetPath("tank-40.png"));
+	m_sprites.push_back(m_state->getInstance()->getFullAssetPath("tank-45.png"));
+	m_sprites.push_back(m_state->getInstance()->getFullAssetPath("tank-50.png"));
 }
 
 void Player::draw()
@@ -57,7 +71,8 @@ void Player::draw()
 	float x = m_pos_x + m_state->m_global_offset_x;
 	float y = m_pos_y + m_state->m_global_offset_y;
 
-	// Find the correct sprint based on the cannon degrees
+	// Find the correct sprint based on the gradient of the ground
+	/*
 	if (m_cannon_degrees < 10.0f) {
 		m_brush_player.texture = m_sprites[0];
 	}
@@ -85,12 +100,13 @@ void Player::draw()
 	else if (m_cannon_degrees >= 80.0f) {
 		m_brush_player.texture = m_sprites[8];
 	}
+	*/
 
 	// Flip the tank along the x-axis for the right player
 	if (not m_isLeftPlayer)
 		graphics::setScale(-1.0f, 1.0f);
 
-	graphics::drawRect(x, y, m_width, m_height, m_brush_player);
+	graphics::drawRect(x + 0.05f, y - 0.11f, 1.2 * m_width, 1.2 * m_height, m_brush_player);
 	graphics::resetPose();
 
 	// Draw Cannonball
@@ -120,19 +136,19 @@ void Player::update(float dt)
 			m_pos_x -= velocity * delta_time;
 		if (graphics::getKeyState(graphics::SCANCODE_D) and m_pos_x < 33.6f)
 			m_pos_x += velocity * delta_time;
-		if (graphics::getKeyState(graphics::SCANCODE_W) and m_cannon_degrees < 80.0f)
-			m_cannon_degrees += 7 * velocity * delta_time;
-		if (graphics::getKeyState(graphics::SCANCODE_S) and m_cannon_degrees > 0.0f)
-			m_cannon_degrees -= 7 * velocity * delta_time;
-
-		if (graphics::getKeyState(graphics::SCANCODE_LEFT))
-			m_pos_x -= velocity * delta_time;
-		if (graphics::getKeyState(graphics::SCANCODE_RIGHT))
+		if (graphics::getKeyState(graphics::SCANCODE_W) and m_pos_x < 33.6f)
 			m_pos_x += velocity * delta_time;
-		if (graphics::getKeyState(graphics::SCANCODE_UP) and m_cannon_degrees < 80.0f)
-			m_cannon_degrees += 7 * velocity * delta_time;
-		if (graphics::getKeyState(graphics::SCANCODE_DOWN) and m_cannon_degrees > 0.0f)
-			m_cannon_degrees -= 7 * velocity * delta_time;
+		if (graphics::getKeyState(graphics::SCANCODE_S) and m_pos_x > 0.1f)
+			m_pos_x -= velocity * delta_time;
+
+		if (graphics::getKeyState(graphics::SCANCODE_LEFT) and m_pos_x > 0.1f)
+			m_pos_x -= velocity * delta_time;
+		if (graphics::getKeyState(graphics::SCANCODE_RIGHT) and m_pos_x < 33.6f)
+			m_pos_x += velocity * delta_time;
+		if (graphics::getKeyState(graphics::SCANCODE_UP) and m_pos_x < 33.6f)
+			m_pos_x += velocity * delta_time;
+		if (graphics::getKeyState(graphics::SCANCODE_DOWN) and m_pos_x > 0.1f)
+			m_pos_x -= velocity * delta_time;
 	}
 
 	// Check to deploy shield
@@ -146,7 +162,6 @@ void Player::update(float dt)
 	// Check to fire shot
 	if (graphics::getKeyState(graphics::SCANCODE_SPACE)) {
 		if (not m_shootingFlag and not m_shot->isActive()) {  // Fire only if the shot is inactive
-			m_shot->setCannonDegrees(m_cannon_degrees);
 			m_shot->init();  // Reinitialize the shot
 			m_shootingFlag = true;
 
@@ -168,7 +183,7 @@ void Player::update(float dt)
 
 	// Calculate m_pos_y based on the ground level at m_pos_x
 	if (m_state && m_state->getCurrentLevel()) {
-		m_pos_y = m_state->getCurrentLevel()->getGroundLevel(m_pos_x);
+		m_pos_y = m_state->getCurrentLevel()->getGroundLevel(m_pos_x) - 0.15f;
 	}
 	else {
 		m_pos_y = 3.0f; // Default value if level or state is not properly set
@@ -194,16 +209,6 @@ void Player::debugDraw()
 	SETCOLOR(debug_brush.fill_color, 1, 0, 0);
 	debug_brush.fill_opacity = 1.0f;
 	graphics::drawText(x - 0.5f * m_width, y - 0.7f * m_height, 0.15f, s, debug_brush);
-}
-
-void Player::setCannonDegrees(float degrees)
-{
-	m_cannon_degrees = degrees;
-}
-
-float Player::getCannonDegrees()
-{
-	return m_cannon_degrees;
 }
 
 void Player::setShootingFlag(bool flag)

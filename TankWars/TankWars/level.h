@@ -33,7 +33,7 @@ class Level : public GameObject
 	float m_center_x = 5.0f;
 	float m_center_y = 5.0f;
 
-	const float m_block_size_x = 1.2f;
+	const float m_block_size_x = 1.5f;
 	const float m_block_size_y = 0.2f;
 
 	std::vector<Box> m_blocks;

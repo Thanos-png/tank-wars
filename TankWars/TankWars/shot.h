@@ -10,7 +10,6 @@ class Shot : public GameObject, public Box {
 	static Shot* m_unique_instance;
 
 	float radius = 0.1f;
-	float m_cannon_degrees = 0.0f;
 
 	// The minimum that we want the gravity to be is 2 and the maximum is 30, but we want the user to choose anywhere from 0 to 100
 	// So we are gona use this function to convert the value to the ones we want.  gravity_function(x) = -0.28 * x + 30
@@ -34,8 +33,6 @@ public:
 	float& getPosX() { return m_pos_x; }
 	float& getPosY() { return m_pos_y; }
 
-	void setCannonDegrees(float cannonDegrees);
-	float getCannonDegrees();
 	void setRadius(float newRadius);
 	float getRadius();
 

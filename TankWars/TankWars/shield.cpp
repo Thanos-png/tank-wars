@@ -17,13 +17,13 @@ void Shield::init()
 
 	if (m_state->getPlayerLeft()->isActive() and m_state->getIsLeftTurn()) {
 		m_pos_x = m_state->getPlayerLeft()->getPosX() + offset;
-		m_pos_y = m_state->getCurrentLevel()->getGroundLevel(m_pos_x) - 0.2f;
+		m_pos_y = m_state->getCurrentLevel()->getGroundLevel(m_pos_x) - 0.32f;
 
 		m_isLeftPlayer = true;
 	}
 	if (m_state->getPlayerRight()->isActive() and not m_state->getIsLeftTurn()) {
 		m_pos_x = m_state->getPlayerRight()->getPosX() - offset;
-		m_pos_y = m_state->getCurrentLevel()->getGroundLevel(m_pos_x) - 0.2f;
+		m_pos_y = m_state->getCurrentLevel()->getGroundLevel(m_pos_x) - 0.32f;
 
 		m_isLeftPlayer = false;
 	}

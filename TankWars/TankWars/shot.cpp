@@ -37,7 +37,7 @@ void Shot::init()
 void Shot::draw()
 {
 	float x = m_pos_x + m_state->m_global_offset_x;
-	float y = m_pos_y + m_state->m_global_offset_y;
+	float y = m_pos_y + m_state->m_global_offset_y + 0.1f;
 
 	graphics::drawRect(x, y, m_width, m_height, m_brush_shot);
 
@@ -83,16 +83,6 @@ void Shot::reset()
 
 	// Change the turn
 	m_state->updateIsLeftTurn();
-}
-
-void Shot::setCannonDegrees(float cannonDegrees)
-{
-	m_cannon_degrees = cannonDegrees;
-}
-
-float Shot::getCannonDegrees()
-{
-	return m_cannon_degrees;
 }
 
 void Shot::setRadius(float newRadius)

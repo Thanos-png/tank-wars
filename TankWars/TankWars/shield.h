@@ -11,7 +11,7 @@ class Shield : public GameObject, public Box {
 
 	float offset = 0.6f;
 	float m_width = 0.2f;
-	float m_height = 0.7f;
+	float m_height = 1.0f;
 
 	bool m_isLeftPlayer = false;
 	bool m_left_turn_processed = false;

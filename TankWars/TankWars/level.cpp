@@ -49,11 +49,11 @@ void Level::init()
 	for (auto p_gob : m_dynamic_objects)
 		if (p_gob) p_gob->init();
 
-	Box leftBase = Box(6, 4.4f, m_block_size_x, m_block_size_y);
+	Box leftBase = Box(6, 4, m_block_size_x, m_block_size_y);
 	leftBase.isLeftBase = true;
 	m_blocks.push_back(leftBase);
 
-	Box rightBase = Box(31.5f, 6.03f, m_block_size_x, m_block_size_y);
+	Box rightBase = Box(31.5f, 5.63f, m_block_size_x, m_block_size_y);
 	rightBase.isRightBase = true;
 	m_blocks.push_back(rightBase);
 	
@@ -105,9 +105,6 @@ void Level::draw()
 
 	for (auto p_gob : m_dynamic_objects)
 		if (p_gob) p_gob->draw();
-
-	// graphics::Brush m_brush_testing;
-	// graphics::drawRect(2, 2.45f, 1, 0.2f, m_brush_testing);
 }
 
 void Level::update(float dt)
@@ -155,6 +152,7 @@ void Level::drawBlock(int i)
 		graphics::drawRect(x, y, m_block_size_x, m_block_size_y, m_block_brush_debug);
 }
 
+#include <iostream>
 void Level::checkCollisions()
 {
 	// Check if the shot collides with a Box
@@ -276,6 +274,8 @@ void Level::checkCollisions()
 		offset = 0.0f;
 		leftShield.m_pos_x -= m_state->m_global_offset_x;
 		leftShield.m_pos_y -= m_state->m_global_offset_y;
+		rightShield.m_pos_x -= m_state->m_global_offset_x;
+		rightShield.m_pos_y -= m_state->m_global_offset_y;
 		if (m_state->getPlayerLeft()->intersectSideways(leftShield) and m_state->getPlayerLeft()->getDeployedShield()) {
 			offset = m_state->getPlayerLeft()->intersectSideways(leftShield);
 			m_state->getPlayerLeft()->m_pos_x += offset;
