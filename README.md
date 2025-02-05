@@ -42,5 +42,3 @@ Contributions are welcome! Please feel free to fork the repository and submit a 
 ## Acknowledgements
 - [SGG Library](https://github.com/cgaueb/sgg)
 - [Athens University of Economics and Business](https://www.dept.aueb.gr/en/cs)
-
-I hope you enjoy playing **Tank Wars** as much as I enjoyed making it!
