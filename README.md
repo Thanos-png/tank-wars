@@ -1,6 +1,6 @@
 # Tank Wars
 
-## 🪖 Overview
+## Overview
 Welcome to **Tank Wars**, a dynamic tank battle game for Windows developed in C++ using the SGG library. Created as part of the coursework for the C++ programming subject at the Athens University of Economics and Business, this game challenges players to navigate a series of tank battles in a strategically designed arena.
 
 ## Features
@@ -23,7 +23,7 @@ cd tank-wars/TankWars/bin
 ./TankWars
 ```
 
-## 🕹️ Controls
+## Controls
 - **Arrows and WASD Keys:** Move your tank around the arena.
 - **Q key:** Apply the shield.
 - **Spacebar:** Fire cannon.
@@ -39,6 +39,6 @@ Contributions are welcome! Please feel free to fork the repository and submit a 
 5. Improve Game Visuals & User Interface
 6. Add Online Support
 
-## 🏆 Credits & Acknowledgements
+## Credits & Acknowledgements
 - [SGG Library](https://github.com/cgaueb/sgg)
 - [Athens University of Economics and Business](https://www.dept.aueb.gr/en/cs)
