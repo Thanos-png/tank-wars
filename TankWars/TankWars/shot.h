@@ -13,7 +13,7 @@ class Shot : public GameObject, public Box {
 
 	const float m_gravity = 5.0f;
 	const float m_accel_vertical = 9.0f;
-	const float m_accel_horizontal = 13.0f;
+	const float m_accel_horizontal = 11.0f;
 	const float m_max_velocity = 3.0f;
 
 public:
